@@ -1,0 +1,20 @@
+name: CI Build
+on: [pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Cache API dependencies
+        id: cache-api
+        uses: actions/cache@v2
+        with:
+          path: ./node_modules
+          key: modules-${{ hashFiles('package-lock.json') }}
+      - name: Install NodeJs
+        uses: actions/setup-node@v1
+      - name: Install dependencies
+        run: npm install
+      - name: Lint
+        run: npm run lint
