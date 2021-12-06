@@ -15,7 +15,7 @@
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write '**/*.{ts,json}'",
     "dev": "npx nodemon --watch src/**/* --ext \"ts,json\" --ignore \"src/**/*.spec.ts\" --exec \"npx ts-node src/index.ts\"",
-    "start": "node index.js",
+    "start": "node src/index.js",
     "build": "tsc --build --verbose "
   },
   "repository": {
