@@ -7,7 +7,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Cache API dependencies
-        id: cache-api
+        id: cache
         uses: actions/cache@v2
         with:
           path: ./node_modules
@@ -15,6 +15,7 @@ jobs:
       - name: Install NodeJs
         uses: actions/setup-node@v1
       - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: npm install
       - name: Lint
         run: npm run lint
