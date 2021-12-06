@@ -1,5 +1,5 @@
-name: CI Build
-on: [pull_request]
+name: CI Lint
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
