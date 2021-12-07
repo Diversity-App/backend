@@ -1,4 +1,4 @@
-FROM node:lastest as build
+FROM node:latest as build
 
 WORKDIR /app
 
@@ -8,13 +8,13 @@ RUN npm install
 
 RUN npm run build
 
-FROM node:lastest as run
+FROM node:latest as run
 
 WORKDIR /app
 
-COPY --from=build build .
-COPY --from=build package.json .
-COPY --from=build .env .
+COPY --from=build /app/build ./src
+COPY --from=build /app/package.json .
+COPY --from=build /app/.env .
 
 RUN npm install
 
