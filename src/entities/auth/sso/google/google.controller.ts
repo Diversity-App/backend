@@ -1,5 +1,6 @@
 import { SSOController, SSOTools, Token, User } from '../../../../types';
 import { Request, Response } from 'express';
+import SsoTool from '../../../../tools/sso.tool';
 
 export default class GoogleController implements SSOController, SSOTools {
     private static clientId: string = process.env.GOOGLE_CLIENT_ID || '';
@@ -57,6 +58,14 @@ export default class GoogleController implements SSOController, SSOTools {
     public static async getToken(req: Request, res: Response): Promise<void> {
         try {
             const { code } = req.query;
+            const { user } = req.session;
+            if (!user) {
+                res.status(401).send({
+                    status: 'error',
+                    error: 'Unauthorized',
+                });
+                return;
+            }
             if (!code || typeof code !== 'string') {
                 res.status(400).send({
                     status: 'error',
@@ -65,9 +74,9 @@ export default class GoogleController implements SSOController, SSOTools {
                 return;
             }
             const token = await GoogleController.fetchToken(code);
-            const user = await GoogleController.fetchUser(token.access_token);
-            // todo create user
-            // todo store token
+            const providerUser = await GoogleController.fetchUser(token.access_token);
+
+            await SsoTool.syncUserToken(user.id, providerUser.id, 'Google', token);
 
             res.json({
                 status: 'success',
