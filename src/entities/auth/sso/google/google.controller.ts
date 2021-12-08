@@ -1,7 +1,7 @@
 import { SSOController, SSOTools, Token, User } from '../../../../types';
 import { Request, Response } from 'express';
 import SsoTool from '../../../../tools/sso.tool';
-import fetch from 'node-fetch';
+import axios from 'axios';
 
 export default class GoogleController implements SSOController, SSOTools {
     private static clientId: string = process.env.GOOGLE_CLIENT_ID || '';
@@ -12,8 +12,12 @@ export default class GoogleController implements SSOController, SSOTools {
     private static state: string = process.env.GOOGLE_STATE || '';
 
     private static async fetchUser(token: string): Promise<User & any> {
-        const res = await fetch(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${token}`);
-        return res.json();
+        const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
     }
 
     private static async fetchToken(code: string): Promise<Token & any> {
@@ -25,15 +29,8 @@ export default class GoogleController implements SSOController, SSOTools {
             grant_type: 'authorization_code',
         };
 
-        const res = await fetch('https://www.googleapis.com/oauth2/v4/token', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: JSON.stringify(body),
-        });
-
-        return res.json();
+        const response = await axios.post('https://www.googleapis.com/oauth2/v4/token', body);
+        return response.data;
     }
 
     public static async getCode(req: Request, res: Response): Promise<void> {
