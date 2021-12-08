@@ -18,7 +18,7 @@ export interface User {
 export abstract class SSOTools {
     protected static async fetchUser($token: string): Promise<User & any>;
 
-    protected static async fetchToken($code: string): Promise<Token>;
+    protected static async fetchToken($code: string): Promise<Token & any>;
 }
 
 export abstract class SSOController {

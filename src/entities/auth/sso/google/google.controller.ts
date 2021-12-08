@@ -1,6 +1,7 @@
 import { SSOController, SSOTools, Token, User } from '../../../../types';
 import { Request, Response } from 'express';
 import SsoTool from '../../../../tools/sso.tool';
+import fetch from 'node-fetch';
 
 export default class GoogleController implements SSOController, SSOTools {
     private static clientId: string = process.env.GOOGLE_CLIENT_ID || '';
@@ -15,7 +16,7 @@ export default class GoogleController implements SSOController, SSOTools {
         return res.json();
     }
 
-    private static async fetchToken(code: string): Promise<Token> {
+    private static async fetchToken(code: string): Promise<Token & any> {
         const body = {
             code: code,
             client_id: GoogleController.clientId,
