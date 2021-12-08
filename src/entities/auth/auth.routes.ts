@@ -7,6 +7,6 @@ const router = Router();
 router.post('/login', AuthController.login);
 router.post('/register', AuthController.register);
 
-router.use('/google', SsoRoutes);
+router.use('/sso', SsoRoutes);
 
 export default router;

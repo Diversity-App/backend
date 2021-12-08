@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import GoogleController from './google.controller';
-import { verifyToken } from '../../../../tools/auth.tools';
+//import { verifyToken } from '../../../../tools/auth.tools';
 
 const router = Router();
 
-router.get('/login', verifyToken, GoogleController.getCode);
+router.get('/login', GoogleController.getCode);
 
-router.get('/callback', verifyToken, GoogleController.getToken);
+router.get('/callback', GoogleController.getToken);
 
 export default router;
