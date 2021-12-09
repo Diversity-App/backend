@@ -1,11 +1,9 @@
-import express from "express";
-import { NextFunction, Request, Response } from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import routes from './entities/routes';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import { User } from './types';
-import {MongoDB} from './tools/database.tools';
 
 const sessionConfig = {
     user: {},
