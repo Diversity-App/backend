@@ -3,6 +3,6 @@ import DataController from './data.controller';
 
 const router = Router();
 
-router.get('/infos', DataController.getLikes);
+router.get('/homePage', DataController.getHomePage);
 
 export default router;

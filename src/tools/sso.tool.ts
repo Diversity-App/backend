@@ -55,4 +55,23 @@ export default class SsoTool {
             new Date(),
         ]);
     }
+
+    static async getProviderToken(userId: number, provider: string) {
+        const query = `
+            SELECT
+                access_token,
+                refresh_token,
+                expires_in
+            FROM
+                "SSO_Tokens"
+            WHERE user_id = $1 AND provider_id IN (
+                SELECT 
+                    id
+                FROM
+                    "SSO_Providers"
+                WHERE name = $2
+            )`;
+        const [token] = (await Pool.query(query, [userId, provider])).rows;
+        return token;
+    }
 }
