@@ -2,5 +2,5 @@
 node_modules
 *.js
 .env
-data
+./data
 .DS_Store
