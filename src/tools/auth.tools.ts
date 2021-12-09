@@ -20,7 +20,6 @@ export function checkPassword(password: string, hash: string) {
 }
 
 export const verifyToken = (req: any, res: any, next: any) => {
-    console.log(req.headers)
     const bearerHeader = req.headers['authorization'] || req.cookies['API_TOKEN'];
     if (!bearerHeader) {
         return res.status(401).send({

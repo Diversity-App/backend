@@ -48,11 +48,11 @@ export default class SsoTool {
             updated_at = NOW()`;
         await Pool.query(query, [
             userId,
+            clientId,
             providerName,
             token.access_token,
             token.refresh_token,
             token.expires_in,
-            new Date(),
         ]);
     }
 

@@ -15,8 +15,12 @@ export default class GoogleController implements SSOController, SSOTools {
     private static state: string = process.env.GOOGLE_STATE || '';
 
     private static async fetchUser(token: string): Promise<User & any> {
-        const res = await axios(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${token}`);
-        return await res.data.json();
+        const res = await axios(`https://www.googleapis.com/oauth2/v3/userinfo`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return await res.data;
     }
 
     private static async fetchToken(code: string): Promise<Token & any> {
@@ -71,13 +75,18 @@ export default class GoogleController implements SSOController, SSOTools {
                 return;
             }
             const token = await GoogleController.fetchToken(code);
+
             const providerUser = await GoogleController.fetchUser(token.access_token);
-            await SsoTool.syncUserToken(1, providerUser.id, 'Google', token);
+            console.log(providerUser);
+
+            await SsoTool.syncUserToken(1, providerUser.sub, 'Google', token);
+
             res.json({
                 status: 'success',
                 token: token.access_token,
             });
         } catch (e) {
+            console.log(e);
             res.status(500).send({
                 status: 'error',
                 error: 'Internal server error',
