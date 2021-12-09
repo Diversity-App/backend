@@ -1,6 +1,6 @@
 import { SSOController, SSOTools, Token, User } from '../../../../types';
 import { Request, Response } from 'express';
-//import SsoTool from '../../../../tools/sso.tool';
+import SsoTool from '../../../../tools/sso.tool';
 import dotenv from 'dotenv';
 import axios from 'axios';
 
@@ -71,8 +71,8 @@ export default class GoogleController implements SSOController, SSOTools {
                 return;
             }
             const token = await GoogleController.fetchToken(code);
-            //const providerUser = await GoogleController.fetchUser(token.access_token);
-            //await SsoTool.syncUserToken(user.id, providerUser.id, 'Google', token);
+            const providerUser = await GoogleController.fetchUser(token.access_token);
+            await SsoTool.syncUserToken(1, providerUser.id, 'Google', token);
             res.json({
                 status: 'success',
                 token: token.access_token,

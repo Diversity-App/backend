@@ -51,16 +51,16 @@ export default class AuthController {
             delete user.password;
 
             res.status(200)
+                .cookie('API_TOKEN', token, {
+                    httpOnly: true,
+                    maxAge: 1000 * 60 * 60 * 24 * 7,
+                })
                 .json({
                     status: 'success',
                     data: {
                         token,
                         user,
                     },
-                })
-                .cookie('API_TOKEN', token, {
-                    httpOnly: true,
-                    maxAge: 1000 * 60 * 60 * 24 * 7,
                 });
         } catch (e) {
             console.log(e);

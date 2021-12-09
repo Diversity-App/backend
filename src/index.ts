@@ -4,6 +4,7 @@ import routes from './entities/routes';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import { User } from './types';
+import cookieParser from 'cookie-parser';
 
 const sessionConfig = {
     user: {},
@@ -25,6 +26,7 @@ const app = express();
 app.use(session(sessionConfig));
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.use(routes);
 
