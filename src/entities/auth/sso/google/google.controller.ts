@@ -1,6 +1,6 @@
 import { SSOController, SSOTools, Token, User } from '../../../../types';
 import { Request, Response } from 'express';
-import SsoTool from '../../../../tools/sso.tool';
+//import SsoTool from '../../../../tools/sso.tool';
 import dotenv from 'dotenv';
 import axios from 'axios';
 
