@@ -1,6 +1,5 @@
 import { Pool } from 'pg';
-import * as mongoDB from "mongodb";
-import * as dotenv from "dotenv";
+import * as mongoDB from 'mongodb';
 
 export default new Pool({
     host: process.env.POSTGRES_HOST || 'localhost',
@@ -15,11 +14,10 @@ export default new Pool({
     idle_in_transaction_session_timeout: 30000,
 });
 
-
-export const collections: { clients?: mongoDB.Collection } = {}
+export const collections: { clients?: mongoDB.Collection } = {};
 const mongo = require('mongodb');
-const MongoClient = mongo.MongoClient;
-const ObjectID = mongo.ObjectID;
+const { MongoClient } = mongo;
+const { ObjectID } = mongo;
 
 export class MongoDB {
     public static client: any;
@@ -37,8 +35,9 @@ export class MongoDB {
     }
 
     public static async setCollection(collection: string) {
-        MongoDB.client.db().createCollection(collection, function (err: any, res: any) {
-            if (!err) console.log("Collection created!") ;else console.log("Collection already created or empty");
+        MongoDB.client.db().createCollection(collection, function (err: any) {
+            if (!err) console.log('Collection created!');
+            else console.log('Collection already created or empty');
         });
     }
     public static async getByContent(collection: string) {
@@ -53,9 +52,9 @@ MongoClient.connect(url, { useNewUrlParser: true }, (err: any, client: { db: (ar
 
     if (err) throw err;
 
-    const db = client.db("test");
+    const db = client.db('test');
 
-    let doc = {_id: new ObjectID(), name: "lol", price: 36600 };
+    let doc = {_id: new ObjectID(), name: 'lol', price: 36600 };
 
     db.collection('toto').insertOne(doc).then((doc: any) => {
 
