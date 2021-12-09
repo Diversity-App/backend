@@ -1,12 +1,11 @@
-import express, { application } from "express";
-import { connectToDatabase } from "./services/database.service"
-import { clientsRouter } from "./routes/clients.router";
-import express, { NextFunction, Request, Response } from 'express';
+import express from "express";
+import { NextFunction, Request, Response } from 'express';
 import dotenv from 'dotenv';
 import routes from './entities/routes';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import { User } from './types';
+import {MongoDB} from './tools/database.tools';
 
 const sessionConfig = {
     user: {},
@@ -40,17 +39,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.listen(8080, () => {
     console.log('listening on port 8080');
 });
+/* 
+MongoDB.getById('cars', "_id").then(console.log); */
 
-
-connectToDatabase()
-    .then(() => {
-        application.use("/clients", clientsRouter);
-
-        application.listen(9090, () => {
-            console.log(`Server started at http://localhost:${9090}`);
-        });
-    })
-    .catch((error: Error) => {
-        console.error("Database connection broke", error);
-        process.exit();
-    });
+//toto et cars as collection
