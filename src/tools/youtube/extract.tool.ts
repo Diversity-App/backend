@@ -1,5 +1,4 @@
 import axios from "axios";
-import { logging } from "googleapis/build/src/apis/logging";
 import { ParsedQs } from "qs";
 import { Token, youtubeVideo } from "../../types";
 import { checkPassword } from "../auth.tools";
