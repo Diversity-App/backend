@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 import * as mongoDB from 'mongodb';
+import { MongoClient, ObjectID } from 'mongodb';
 
 export default new Pool({
     host: process.env.POSTGRES_HOST || 'localhost',
@@ -15,17 +16,11 @@ export default new Pool({
 });
 
 export const collections: { clients?: mongoDB.Collection } = {};
-const mongo = require('mongodb');
-const { MongoClient } = mongo;
-const { ObjectID } = mongo;
 
 export class MongoDB {
     public static client: any;
     public static connect() {
-        MongoDB.client = new MongoClient(process.env.DB_CONN_STRING, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
+        MongoDB.client = new MongoClient(process.env.DB_CONN_STRING, {});
         MongoDB.client.connect();
     }
 
