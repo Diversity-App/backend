@@ -16,13 +16,13 @@ export interface User {
 }
 
 export abstract class SSOTools {
-    protected static async fetchUser($token: string): Promise<User & any>;
+    protected static fetchUser($token: string): Promise<User & any>;
 
-    protected static async fetchToken($code: string): Promise<Token>;
+    protected static fetchToken($code: string): Promise<Token & any>;
 }
 
 export abstract class SSOController {
-    public static async getCode($req: Request, $res: Response): Promise<void>;
+    public static getCode($req: Request, $res: Response): Promise<void>;
 
-    public static async getToken($req: Request, $res: Response): Promise<void>;
+    public static getToken($req: Request, $res: Response): Promise<void>;
 }

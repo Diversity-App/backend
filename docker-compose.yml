@@ -16,7 +16,7 @@ services:
     networks:
       - default
   mongo:
-    image: mongo:3.4
+    image: mongo:latest
     env_file:
       - .env
     ports:
