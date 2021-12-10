@@ -20,7 +20,7 @@ export function checkPassword(password: string, hash: string) {
 }
 
 export const verifyToken = (req: any, res: any, next: any) => {
-    const bearerHeader = req.headers['Authorization'] || req.cookies['API_TOKEN'];
+    const bearerHeader = req.headers['authorization'] || req.cookies['API_TOKEN'];
     if (!bearerHeader) {
         return res.status(401).send({
             status: 'error',
@@ -38,7 +38,7 @@ export const verifyToken = (req: any, res: any, next: any) => {
     }
 
     try {
-        const decoded = jwt.verify(access_token, process.env.JWT_SECRET || 'secret');
+        const decoded = jwt.verify(access_token, JWT_SECRET);
         if (typeof decoded != 'string' && decoded.id) {
             req.session.user = decoded;
             next();
@@ -49,6 +49,7 @@ export const verifyToken = (req: any, res: any, next: any) => {
             });
         }
     } catch (error) {
+        console.error(error);
         return res.status(400).send({
             status: 'error',
             message: 'Invalid token.',
