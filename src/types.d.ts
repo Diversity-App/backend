@@ -6,6 +6,20 @@ export interface Token {
     expires_in: number;
 }
 
+export interface youtubeVideo {
+    id: string;
+    title: string;
+    description: string;
+    thumbnail: string;
+    publishedAt: string;
+    channelTitle: string;
+    tags: Array<string>
+    duration: string;
+    category: number,
+    viewCount: number;
+    likeCount: number;    
+}
+
 export interface User {
     id: number;
     uuid: string;

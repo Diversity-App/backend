@@ -1,8 +1,28 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
 import SsoTool from '../../tools/sso.tool';
+import { Token, youtubeVideo } from '../../types';
+import extractVideoProperties from '../../tools/youtube/extract.tool';
 
 export default class DataController {
+    static async getStats(req: Request, res: Response) {
+        //get id from params
+        const { id } = req.query;
+        const { user } = req.session;
+        if (!user) {
+            return res.redirect('/auth/login');
+        }
+
+        const youtubeToken: Token = await SsoTool.getProviderToken(user.id, 'Google');
+        if (!youtubeToken) {
+            return res.redirect('/auth/sso/google/login');
+        }
+        if (typeof id != 'string')
+            res.status(400).json("Invalid query. Expected id")
+        const videoStats: youtubeVideo = await extractVideoProperties(id as string, youtubeToken);
+        res.status(200).json(videoStats);
+	}
+
     static async getHomePage(req: Request, res: Response) {
         const { user } = req.session;
         if (!user) {
@@ -50,17 +70,17 @@ export default class DataController {
         if (!user) {
             return res.redirect('/auth/login');
         }
-
         const youtubeToken = await SsoTool.getProviderToken(user.id, 'Google');
+
         if (!youtubeToken) {
             return res.redirect('/auth/sso/google/login');
         }
 
-        const response = await axios.get('https://www.googleapis.com/youtube/v3/channels', {
+        const response = await axios.get('https://www.googleapis.com/youtube/v3/videos', {
             params: {
-                part: 'contentDetails',
-                mine: true,
-                maxResults: 20,
+                part: 'snippet',
+                myRating: 'like',
+                maxResults: 100,
             },
             headers: {
                 Authorization: 'Bearer ' + youtubeToken.access_token,
