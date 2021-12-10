@@ -33,7 +33,7 @@ export default class GoogleController implements SSOController, SSOTools {
             grant_type: 'authorization_code',
         };
 
-        const res = await axios(`https://www.googleapis.com/oauth2/v4/token?${new URLSearchParams(body).toString()}`, {
+        const res = await axios('https://www.googleapis.com/oauth2/v4/token', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

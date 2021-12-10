@@ -34,10 +34,10 @@ export default class DataController {
             return res.redirect('/auth/sso/google/login');
         }
 
-        const response = await axios.get('https://www.googleapis.com/youtube/v3/activities', {
+        const response = await axios.get('https://www.googleapis.com/youtube/v2/channels', {
             params: {
                 part: 'snippet,contentDetails,id',
-                home: true,
+                mine: true,
                 maxResults: 20,
             },
             headers: {
@@ -62,17 +62,16 @@ export default class DataController {
                 id,
             };
         });
-
         res.status(200).json(videos);
     }
 
-    static async getLikes(req: Request, res: Response) {
-        //const { user } = req.session;
-        // if (!user) {
-        //     return res.redirect('/auth/login');
-        // }
+    static async getLikedPlaylistsID(req: Request, res: Response) {
+        const { user } = req.session;
+        if (!user) {
+            return res.redirect('/auth/login');
+        }
+        const youtubeToken = await SsoTool.getProviderToken(user.id, 'Google');
 
-        const youtubeToken: Token = await SsoTool.getProviderToken(1, 'Google');
         if (!youtubeToken) {
             return res.redirect('/auth/sso/google/login');
         }
@@ -91,6 +90,51 @@ export default class DataController {
         const { data } = response;
         const { items } = data;
 
-        res.status(200).json(data);
+        const videos = items.map((item: any) => {
+            const { contentDetails } = item;
+            const { likes } = contentDetails.relatedPlaylists;
+            return {
+                likes,
+            };
+        });
+        return videos;
+    }
+
+    static async getLikedPlaylists(req: Request, res: Response) {
+        const playlistID = await DataController.getLikedPlaylistsID(req, res);
+
+        const { user } = req.session;
+        if (!user) {
+            return res.redirect('/auth/login');
+        }
+
+        const youtubeToken = await SsoTool.getProviderToken(user.id, 'Google');
+        if (!youtubeToken) {
+            return res.redirect('/auth/sso/google/login');
+        }
+
+        const response = await axios.get('https://www.googleapis.com/youtube/v3/playlistItems', {
+            params: {
+                part: 'snippet',
+                playlistId: playlistID[0].likes,
+                mine: true,
+                maxResults: 20,
+            },
+            headers: {
+                Authorization: 'Bearer ' + youtubeToken.access_token,
+            },
+        });
+
+        // const { data } = response;
+        // const { items } = data;
+
+        // const videos = items.map((item: any) => {
+        //     const { snippet, contentDetails } = item;
+        //     const { likes } = contentDetails.relatedPlaylists;
+        //     return {
+        //         likes,
+        //     };
+        // });
+        res.status(200).json(response.data.items);
     }
 }
