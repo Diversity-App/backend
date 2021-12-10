@@ -12,7 +12,7 @@ FROM node:latest as run
 
 WORKDIR /app
 
-COPY --from=build /app/build ./src
+COPY --from=build /app/dist ./src
 COPY --from=build /app/package.json .
 COPY --from=build /app/.env .
 

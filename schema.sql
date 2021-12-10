@@ -33,3 +33,4 @@ CREATE TABLE "SSO_Tokens" (
     CONSTRAINT fk_sso_tokens_users FOREIGN KEY ("user_id") REFERENCES "Users" ("id") ON DELETE CASCADE,
     CONSTRAINT fk_sso_tokens_sso_providers FOREIGN KEY ("provider_id") REFERENCES "SSO_Providers" ("id") ON DELETE CASCADE
 );
+
