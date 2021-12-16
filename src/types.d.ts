@@ -39,6 +39,15 @@ export interface StatItem {
     updated_at: number;
 }
 
+export interface StatSummary {
+    items: Array<StatItem>;
+    total: number;
+    categories: Array<Category>;
+    tags: Array<Tag>;
+    tagsRatio: Array<{ name: string; count: number }>;
+    categoriesRatio: Array<{ name: string; count: number }>;
+}
+
 export interface User {
     id: number;
     uuid: string;
