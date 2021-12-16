@@ -92,7 +92,7 @@ export default class YoutubeApiWrapper {
         });
     }
 
-    static async getUserHomepage(userId: number, token: string): Promise<Playlist> {
+    static async getUserHomepage(token: string): Promise<Playlist> {
         const params = {
             part: 'snippet',
             mine: true,
@@ -163,6 +163,49 @@ export default class YoutubeApiWrapper {
             channel: response.data.items[0].snippet.channelTitle,
             duration: response.data.items[0].contentDetails.duration,
             category: response.data.items[0].snippet.categoryId,
+        };
+    }
+
+    static async getLikedPlaylist(token: string): Promise<Playlist> {
+        const params = {
+            part: 'snippet',
+            myRating: 'like',
+            maxResults: 50,
+            parts: 'snippet',
+            key: token,
+        };
+        const url = `https://www.googleapis.com/youtube/v3/playlists`;
+        const response = await axios({
+            params,
+            method: 'get',
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        // parse response into playlist object
+        const videos: Video[] = response.data.items.map((item: any) => {
+            return {
+                id: item.snippet.resourceId.videoId,
+                title: item.snippet.title,
+                description: item.snippet.description,
+                thumbnail: item.snippet.thumbnails.default.url,
+                publishedAt: item.snippet.publishedAt,
+                channelId: item.snippet.channelId,
+                channelTitle: item.snippet.channelTitle,
+                playlistId: item.id,
+            };
+        });
+
+        const playlist = response.data.items.find((item: any) => item.id === response.data.items[0].id);
+        return {
+            id: playlist.id,
+            playlistTitle: playlist.snippet.title,
+            description: playlist.snippet.description,
+            thumbnail: playlist.snippet.thumbnails.default.url,
+            videos: videos,
         };
     }
 }
