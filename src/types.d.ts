@@ -13,11 +13,39 @@ export interface youtubeVideo {
     thumbnail: string;
     publishedAt: string;
     channelTitle: string;
-    tags: Array<string>
+    channelId: string;
     duration: string;
-    category: number,
-    viewCount: number;
-    likeCount: number;    
+    viewCount: string;
+    likeCount: string;
+    dislikeCount: string;
+    favoriteCount: string;
+    commentCount: string;
+    tags: string[];
+    category: string;
+}
+
+export type Tag = string;
+export type Category = string;
+
+export interface StatItem {
+    source: string;
+    // linkedUserId: number;
+    // sourceId: string;
+    title: string;
+    description: string;
+    tags: Array<Tag>;
+    categories: Array<Category>;
+    created_at: number;
+    updated_at: number;
+}
+
+export interface StatSummary {
+    items: Array<StatItem>;
+    total: number;
+    categories: Array<Category>;
+    tags: Array<Tag>;
+    tagsRatio: Array<{ name: string; count: number }>;
+    categoriesRatio: Array<{ name: string; count: number }>;
 }
 
 export interface User {
