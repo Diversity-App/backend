@@ -29,14 +29,14 @@ export type Category = string;
 
 export interface StatItem {
     source: string;
-    linkedUserId: number;
-    sourceId: string;
+    // linkedUserId: number;
+    // sourceId: string;
     title: string;
     description: string;
     tags: Array<Tag>;
     categories: Array<Category>;
-    created_at: string;
-    updated_at: string;
+    created_at: number;
+    updated_at: number;
 }
 
 export interface User {

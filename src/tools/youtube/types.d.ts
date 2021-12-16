@@ -7,6 +7,7 @@ export interface Video {
     tags: string[];
     channel: string;
     channelId: string;
+    category: string;
 }
 
 export interface Playlist {

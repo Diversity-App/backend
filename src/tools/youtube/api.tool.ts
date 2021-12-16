@@ -162,6 +162,7 @@ export default class YoutubeApiWrapper {
             channelId: response.data.items[0].snippet.channelId,
             channel: response.data.items[0].snippet.channelTitle,
             duration: response.data.items[0].contentDetails.duration,
+            category: response.data.items[0].snippet.categoryId,
         };
     }
 }
