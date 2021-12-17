@@ -4,11 +4,16 @@ import { StatItem } from '../../types';
 export default class StatsTool {
     static parseVideoStats(video: Video): StatItem {
         const categories = video.category.split(',');
+        const tags = video.tags
+            ? video.tags.reduce((acc, tag) => {
+                  return [...acc, ...tag.split(' ').map((t) => t.trim().toLowerCase())];
+              }, [])
+            : [];
 
         const stats = {
             source: 'youtube',
             title: video.title,
-            tags: video.tags || [],
+            tags: tags,
             categories: categories,
             description: video.description,
             created_at: Date.now(),
