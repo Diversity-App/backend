@@ -74,12 +74,21 @@ export default class GoogleController implements SSOController, SSOTools {
                 });
                 return;
             }
+
+            const { user } = req.session;
+            if (!user) {
+                res.status(401).send({
+                    status: 'error',
+                    error: 'Unauthorized',
+                });
+                return;
+            }
             const token = await GoogleController.fetchToken(code);
 
             const providerUser = await GoogleController.fetchUser(token.access_token);
             console.log(providerUser);
 
-            await SsoTool.syncUserToken(1, providerUser.sub, 'Google', token);
+            await SsoTool.syncUserToken(user.id, providerUser.sub, 'Google', token);
 
             res.json({
                 status: 'success',
