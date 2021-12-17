@@ -1,5 +1,4 @@
 from pandas import DataFrame
-from pandas.io.pytables import dropna_doc
 from pymongo import MongoClient
 
 #documentation exemple
