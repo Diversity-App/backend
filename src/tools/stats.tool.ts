@@ -22,7 +22,6 @@ export default class StatsTool {
             .sort((a, b) => b.count - a.count);
 
         const tags = stats.reduce((acc: { [key: string]: number }, curr) => {
-            console.log(curr);
             const { tags } = curr;
             tags.forEach((tag) => {
                 if (!acc[tag]) {
