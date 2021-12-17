@@ -180,13 +180,12 @@ export default class YoutubeApiWrapper {
 
     static async getLikedPlaylist(token: string): Promise<Playlist> {
         const params = {
-            part: 'snippet',
             myRating: 'like',
             maxResults: 50,
-            parts: 'snippet',
+            part: 'snippet,contentDetails',
             key: token,
         };
-        const url = `https://www.googleapis.com/youtube/v3/playlists`;
+        const url = `https://www.googleapis.com/youtube/v3/videos`;
         const response = await axios({
             params,
             method: 'get',
