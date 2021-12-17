@@ -120,6 +120,26 @@ export default class YoutubeApiWrapper {
         };
     }
 
+    static async getCategoryName(categoryId: string, token: string) {
+        console.log('[YoutubeApiWrapper] getCategoryName', categoryId);
+        const params = {
+            part: 'snippet',
+            id: categoryId,
+            key: token,
+        };
+        const url = `https://www.googleapis.com/youtube/v3/videoCategories`;
+        const response = await axios({
+            params,
+            method: 'get',
+            url: url,
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data.items[0].snippet.title;
+    }
+
     static async getVideoInfo(videoId: string, token: string): Promise<Video> {
         console.log('[YoutubeApiWrapper] getVideoInfo', videoId);
         const params = {
@@ -143,6 +163,8 @@ export default class YoutubeApiWrapper {
             // throw new Error('Video not found or is not available');
         }
 
+        const categoryName = await YoutubeApiWrapper.getCategoryName(response.data.items[0].snippet.categoryId, token);
+
         return {
             id: response.data.items[0].id,
             title: response.data.items[0].snippet.title,
@@ -152,7 +174,7 @@ export default class YoutubeApiWrapper {
             channelId: response.data.items[0].snippet.channelId,
             channel: response.data.items[0].snippet.channelTitle,
             duration: response.data.items[0].contentDetails.duration,
-            category: response.data.items[0].snippet.categoryId,
+            category: categoryName,
         };
     }
 
@@ -176,18 +198,9 @@ export default class YoutubeApiWrapper {
         });
 
         // parse response into playlist object
-        const videos: Video[] = response.data.items.map((item: any) => {
-            return {
-                id: item.snippet.resourceId.videoId,
-                title: item.snippet.title,
-                description: item.snippet.description,
-                thumbnail: item.snippet.thumbnails.default.url,
-                publishedAt: item.snippet.publishedAt,
-                channelId: item.snippet.channelId,
-                channelTitle: item.snippet.channelTitle,
-                playlistId: item.id,
-            };
-        });
+        const videos: PlaylistVideo[] = await Promise.all(
+            response.data.items.map(async (item: any) => await YoutubeApiWrapper.getPlaylistItems(item.id, token)),
+        );
 
         const playlist = response.data.items.find((item: any) => item.id === response.data.items[0].id);
         return {
