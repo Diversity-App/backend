@@ -3,15 +3,12 @@ import { StatItem } from '../../types';
 
 export default class StatsTool {
     static parseVideoStats(video: Video): StatItem {
-        if (!Array.isArray(video.tags)) throw 'Invalid video tags';
-        // @ts-ignore
-        const tags = video.tags.split(',');
         const categories = video.category.split(',');
 
         const stats = {
             source: 'youtube',
             title: video.title,
-            tags: tags,
+            tags: video.tags || [],
             categories: categories,
             description: video.description,
             created_at: Date.now(),

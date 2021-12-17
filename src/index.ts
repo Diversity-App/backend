@@ -37,9 +37,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.listen(8080, () => {
-    console.log('listening on port 8080');
+    console.log('Listening on port 8080');
 });
-/* 
+/*
 MongoDB.getById('cars', "_id").then(console.log); */
 
 //toto et cars as collection

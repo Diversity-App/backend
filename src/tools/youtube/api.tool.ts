@@ -61,8 +61,9 @@ export default class YoutubeApiWrapper {
     }
 
     static async getPlaylistItems(playlistId: string, token: string): Promise<PlaylistVideo[]> {
+        console.log('[YoutubeApiWrapper] getPlaylistItems', playlistId);
         const params = {
-            part: 'snippet',
+            part: 'snippet,contentDetails,status,id',
             maxResults: 50,
             playlistId,
             key: token,
@@ -78,26 +79,18 @@ export default class YoutubeApiWrapper {
                 Authorization: `Bearer ${token}`,
             },
         });
-        return response.data.items.map((item: any) => {
-            return {
-                id: item.snippet.resourceId.videoId,
-                title: item.snippet.title,
-                description: item.snippet.description,
-                thumbnail: item.snippet.thumbnails.default.url,
-                publishedAt: item.snippet.publishedAt,
-                channelId: item.snippet.channelId,
-                channelTitle: item.snippet.channelTitle,
-                playlistId: item.snippet.playlistId,
-            };
-        });
+        return await Promise.all(
+            response.data.items.map((item: any) => YoutubeApiWrapper.getVideoInfo(item.contentDetails.videoId, token)),
+        );
     }
 
     static async getUserHomepage(token: string): Promise<Playlist> {
+        console.log('[YoutubeApiWrapper] getUserHomepage');
         const params = {
             part: 'snippet',
             mine: true,
             maxResults: 50,
-            parts: 'snippet',
+            parts: 'snippet,contentDetails,status,player,statistics,topicDetails',
             key: token,
         };
         const url = `https://www.googleapis.com/youtube/v3/playlists`;
@@ -112,18 +105,10 @@ export default class YoutubeApiWrapper {
         });
 
         // parse response into playlist object
-        const videos: Video[] = response.data.items.map((item: any) => {
-            return {
-                id: item.snippet.resourceId.videoId,
-                title: item.snippet.title,
-                description: item.snippet.description,
-                thumbnail: item.snippet.thumbnails.default.url,
-                publishedAt: item.snippet.publishedAt,
-                channelId: item.snippet.channelId,
-                channelTitle: item.snippet.channelTitle,
-                playlistId: item.id,
-            };
-        });
+
+        const videos: PlaylistVideo[] = await Promise.all(
+            response.data.items.map(async (item: any) => await YoutubeApiWrapper.getPlaylistItems(item.id, token)),
+        );
 
         const playlist = response.data.items.find((item: any) => item.id === response.data.items[0].id);
         return {
@@ -131,12 +116,12 @@ export default class YoutubeApiWrapper {
             playlistTitle: playlist.snippet.title,
             description: playlist.snippet.description,
             thumbnail: playlist.snippet.thumbnails.default.url,
-            // @ts-ignore
-            videos: videos,
+            videos: videos.flat(1).filter((video: any) => video),
         };
     }
 
     static async getVideoInfo(videoId: string, token: string): Promise<Video> {
+        console.log('[YoutubeApiWrapper] getVideoInfo', videoId);
         const params = {
             part: 'snippet,contentDetails',
             id: videoId,
@@ -152,6 +137,11 @@ export default class YoutubeApiWrapper {
                 Authorization: `Bearer ${token}`,
             },
         });
+
+        if (!response.data.items.length) {
+            return null;
+            // throw new Error('Video not found or is not available');
+        }
 
         return {
             id: response.data.items[0].id,
