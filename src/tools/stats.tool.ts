@@ -14,10 +14,12 @@ export default class StatsTool {
             });
             return acc;
         }, {});
-        const categoriesArray = Object.keys(categories).map((key) => ({
-            name: key,
-            count: categories[key],
-        }));
+        const categoriesArray = Object.keys(categories)
+            .map((key) => ({
+                name: key,
+                count: categories[key],
+            }))
+            .sort((a, b) => b.count - a.count);
 
         const tags = stats.reduce((acc: { [key: string]: number }, curr) => {
             const { tags } = curr;
@@ -29,10 +31,12 @@ export default class StatsTool {
             });
             return acc;
         }, {});
-        const tagsArray = Object.keys(tags).map((key) => ({
-            name: key,
-            count: tags[key],
-        }));
+        const tagsArray = Object.keys(tags)
+            .map((key) => ({
+                name: key,
+                count: tags[key],
+            }))
+            .sort((a, b) => b.count - a.count);
 
         return {
             categories: Object.keys(categories),
