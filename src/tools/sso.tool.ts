@@ -47,7 +47,6 @@ export default class SsoTool {
             expires_in = $6,
             updated_at = NOW()`;
 
-        //console.log(query);
         await Pool.query(query, [
             userId,
             clientId,
