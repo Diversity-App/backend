@@ -46,6 +46,8 @@ export default class SsoTool {
             refresh_token = $5,
             expires_in = $6,
             updated_at = NOW()`;
+
+        //console.log(query);
         await Pool.query(query, [
             userId,
             clientId,
