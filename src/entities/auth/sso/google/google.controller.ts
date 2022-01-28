@@ -28,17 +28,12 @@ export default class GoogleController implements SSOController, SSOTools {
             code: code,
             client_id: GoogleController.clientId,
             client_secret: GoogleController.clientSecret,
-            redirect_uri: GoogleController.redirectUrl,
-            scope: GoogleController.scope,
+            redirect_uri: "https://auth.expo.io/@area1234/diversity_app", // change @ to your expo account, will be changed to ngrok
             grant_type: 'authorization_code',
         };
 
         const res = await axios(`https://www.googleapis.com/oauth2/v4/token?${new URLSearchParams(body).toString()}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            data: body,
         });
         return await res.data;
     }
@@ -84,6 +79,7 @@ export default class GoogleController implements SSOController, SSOTools {
                 return;
             }
             const token = await GoogleController.fetchToken(code);
+            console.log(token)
 
             const providerUser = await GoogleController.fetchUser(token.access_token);
             console.log(providerUser);
