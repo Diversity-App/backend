@@ -28,7 +28,7 @@ export default class GoogleController implements SSOController, SSOTools {
             code: code,
             client_id: GoogleController.clientId,
             client_secret: GoogleController.clientSecret,
-            redirect_uri: "https://auth.expo.io/@area1234/diversity_app", // change @ to your expo account
+            redirect_uri: "https://auth.expo.io/@area1234/diversity_app", // change @ to your expo account, will be changed to ngrok
             grant_type: 'authorization_code',
         };
 
@@ -69,7 +69,6 @@ export default class GoogleController implements SSOController, SSOTools {
                 });
                 return;
             }
-            console.log("google code ->", code);
 
             const { user } = req.session;
             if (!user) {
